@@ -2,6 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from recommender import recommend_books
+import os
+from database import setup_database
+
+# Build database if it doesn't exist
+if not os.path.exists("books.db"):
+    setup_database()
 
 app = FastAPI()
 
