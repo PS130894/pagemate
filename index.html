@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagemate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #F5F0E8;
+            font-family: 'Inter', sans-serif;
+            color: #2C2416;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #2C2416;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: #7A6A52;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .card {
+            background: #FFFDF7;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(44, 36, 22, 0.08);
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #7A6A52;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #E8DFD0;
+            border-radius: 10px;
+            background: #F5F0E8;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: #2C2416;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: #C4873A;
+        }
+
+        .mood-section { margin-bottom: 20px; }
+
+        .mood-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 1.5px solid #E8DFD0;
+            background: #F5F0E8;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #7A6A52;
+        }
+
+        .chip:hover { border-color: #C4873A; color: #C4873A; }
+
+        .chip.active {
+            background: #C4873A;
+            border-color: #C4873A;
+            color: white;
+        }
+
+        .toggle-filters {
+            background: none;
+            border: none;
+            color: #C4873A;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .advanced-filters { display: none; }
+        .advanced-filters.open { display: block; }
+
+        .slider-group { margin-bottom: 20px; }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #C4873A;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 16px;
+            background: #C4873A;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover { background: #A8702E; }
+
+        .btn-surprise {
+            padding: 16px 20px;
+            background: #F5F0E8;
+            color: #7A6A52;
+            border: 1.5px solid #E8DFD0;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-surprise:hover { border-color: #C4873A; color: #C4873A; }
+
+        .results { display: none; }
+        .results.visible { display: block; }
+
+        .results h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: #2C2416;
+        }
+
+        .book-card {
+            background: #FFFDF7;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 24px rgba(44, 36, 22, 0.08);
+            margin-bottom: 16px;
+            border-left: 4px solid #C4873A;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2C2416;
+        }
+
+        .book-author {
+            font-size: 0.9rem;
+            color: #7A6A52;
+            margin: 4px 0 12px;
+        }
+
+        .book-rating {
+            display: inline-block;
+            background: #F5F0E8;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #C4873A;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .book-reason {
+            font-size: 0.95rem;
+            color: #4A3F30;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #7A6A52;
+            font-style: italic;
+        }
+
+        .loading.visible { display: block; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Pagemate</h1>
+    <p>Your personal reading companion</p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <label>What kind of book are you looking for?</label>
+        <input type="text" id="preference" placeholder="e.g. a gripping mystery set in London...">
+
+        <label>What's the last book you enjoyed?</label>
+        <input type="text" id="lastBook" placeholder="e.g. The Alchemist">
+
+        <div class="mood-section">
+            <label>What's your mood?</label>
+            <div class="mood-chips">
+                <div class="chip" id="mood-1">Light & Fun</div>
+                <div class="chip" id="mood-2">Dark & Gripping</div>
+                <div class="chip" id="mood-3">Inspiring</div>
+                <div class="chip" id="mood-4">Challenging</div>
+                <div class="chip" id="mood-5">Romantic</div>
+                <div class="chip" id="mood-6">Adventurous</div>
+            </div>
+        </div>
+
+        <button class="toggle-filters" onclick="toggleFilters()">⚙️ Advanced filters</button>
+
+        <div class="advanced-filters" id="advancedFilters">
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label>Minimum rating</label>
+                    <span id="ratingVal">4.0</span>
+                </div>
+                <input type="range" min="3" max="5" step="0.1" value="4.0" id="minRating"
+                    oninput="document.getElementById('ratingVal').textContent = this.value">
+            </div>
+
+            <div class="slider-group">
+                <label>Genre</label>
+                <input type="text" id="genre" placeholder="e.g. Fantasy, Mystery, Romance...">
+            </div>
+
+            <div class="slider-group">
+                <label>Specific author</label>
+                <input type="text" id="author" placeholder="e.g. Agatha Christie">
+            </div>
+        </div>
+
+        <div class="cta-row">
+            <button class="btn-primary" onclick="getRecommendations()">Find my next read ✨</button>
+            <button class="btn-surprise" onclick="surpriseMe()">🎲 Surprise me</button>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">Finding your perfect books...</div>
+
+    <div class="results" id="results">
+        <h2>Your recommendations</h2>
+        <div id="bookCards"></div>
+    </div>
+</div>
+
+<script>
+    let selectedMood = null;
+
+    document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        selectedMood = this.textContent;
+    });
+});
+    function toggleFilters() {
+        const f = document.getElementById('advancedFilters');
+        f.classList.toggle('open');
+    }
+
+    async function getRecommendations() {
+        const preference = document.getElementById('preference').value;
+        if (!preference) { alert('Please tell us what kind of book you are looking for!'); return; }
+
+        document.getElementById('loading').classList.add('visible');
+        document.getElementById('results').classList.remove('visible');
+
+        const payload = {
+            preference: preference,
+            last_book: document.getElementById('lastBook').value || null,
+            mood: selectedMood,
+            min_rating: parseFloat(document.getElementById('minRating').value),
+            genre: document.getElementById('genre').value || undefined,
+            author: document.getElementById('author').value || undefined
+        };
+
+        try {
+            const res = await fetch('http://localhost:8000/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            displayResults(data.recommendations);
+        } catch (e) {
+            alert('Something went wrong. Make sure the API is running!');
+        }
+
+        document.getElementById('loading').classList.remove('visible');
+    }
+
+    function surpriseMe() {
+        const moods = ['Light & Fun', 'Dark & Gripping', 'Inspiring', 'Challenging', 'Romantic', 'Adventurous'];
+        const genres = ['Fantasy', 'Mystery', 'Romance', 'Science Fiction', 'Historical Fiction', 'Thriller'];
+        const randomMood = moods[Math.floor(Math.random() * moods.length)];
+        const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+
+        document.getElementById('preference').value = 'Surprise me with something great';
+        document.getElementById('genre').value = randomGenre;
+        document.getElementById('advancedFilters').classList.add('open');
+
+        document.querySelectorAll('.chip').forEach(c => {
+            if (c.textContent === randomMood) { c.classList.add('active'); selectedMood = randomMood; }
+        });
+
+        getRecommendations();
+    }
+
+    function displayResults(text) {
+    const cards = document.getElementById('bookCards');
+    cards.innerHTML = '';
+
+    const books = text.split('BOOK_START').filter(b => b.includes('BOOK_END'));
+
+    books.forEach(book => {
+        const title = book.match(/Title:\s*(.+)/)?.[1]?.trim();
+        const author = book.match(/Author:\s*(.+)/)?.[1]?.trim();
+        const rating = book.match(/Rating:\s*(.+)/)?.[1]?.trim();
+        const url = book.match(/URL:\s*(.+)/)?.[1]?.trim();
+        const reason = book.match(/Reason:\s*(.+)/s)?.[1]?.replace('BOOK_END', '').trim();
+
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.innerHTML = `
+            <div class="book-title">${title || 'Book'}</div>
+            <div class="book-author">${author || ''}</div>
+            <div class="book-rating">⭐ ${rating || ''}</div>
+            ${url ? `<a href="${url}" target="_blank" style="display:inline-block; margin-bottom:12px; font-size:0.85rem; color:#C4873A; text-decoration:none;">View on Goodreads →</a>` : ''}
+            <div class="book-reason">${reason || ''}</div>
+        `;
+        cards.appendChild(card);
+    });
+
+    document.getElementById('results').classList.add('visible');
+}
+</script>
+
+</body>
+</html>
