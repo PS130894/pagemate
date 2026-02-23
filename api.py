@@ -8,7 +8,7 @@ app = FastAPI()
 # This allows our HTML file to talk to the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://pagemate.netlify.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
